@@ -1,0 +1,4 @@
+[core]
+    remote = local_remote
+['remote "local_remote"']
+    url = C:\Users\david\GitRepo\urban-traffic-prediction-repo\data\raw\dvc_remote_storage
