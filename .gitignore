@@ -1,6 +1,7 @@
 # Data
 /data/*
 !/data/raw/
+!/data/processed/*.dvc  # Permite los archivos .dvc en processed
 
 # Mac OS-specific storage files
 .DS_Store
