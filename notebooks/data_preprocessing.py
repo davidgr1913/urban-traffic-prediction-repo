@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
-data_path = 'desc.csv'
+data_path = data_path = '../data/raw/Behavior of the urban traffic of the city of Sao Paulo in Brazil.csv' 
 
 # Cargar el archivo con el separador correcto (punto y coma)
 df = pd.read_csv(data_path, sep=';', engine='python')
