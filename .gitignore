@@ -1,6 +1,6 @@
 # Data
 /data/*
-!/data/raw/
+!/data/raw/*.csv  # Permite los archivos .csv en raw
 !/data/processed/
 !/data/processed/*.dvc  # Permite los archivos .dvc en processed
 
@@ -135,6 +135,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
+mlopsvenv/
 .env
 .venv
 env/

@@ -1,0 +1,23 @@
+base:
+  random_state: 42
+  log_level: INFO
+
+
+
+data_preprocess:
+  data_raw_path: "data/raw/Behavior of the urban traffic of the city of Sao Paulo in Brazil.csv.dvc"
+  data_preprocessed_path: "data/processed/preprocessed_data.csv"
+  fill_na_method: "mean"
+
+data_split:
+  test_size: 0.2
+  random_state: 42
+
+
+model:
+  model_path: "models/model.pkl"
+  model_type: "RandomForestClassifier"
+  model_params:
+    n_estimators: 100
+    random_state: 42
+
