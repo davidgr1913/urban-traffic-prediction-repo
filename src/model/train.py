@@ -20,12 +20,11 @@ from sklearn.metrics import ( mean_squared_error,
 import joblib
 
 # Modelos
-from sklearn.linear_model import LinearRegression, LogisticRegression
+from sklearn.linear_model import LinearRegression
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import RandomForestRegressor
 from xgboost import XGBRegressor
-from sklearn.neural_network import MLPRegressor
 from sklearn.svm import SVR
 
 # Importación de un logger personalizado
