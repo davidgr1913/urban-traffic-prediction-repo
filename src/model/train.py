@@ -1,21 +1,25 @@
-
-import seaborn as sns
+import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
-from sklearn.impute import SimpleImputer
-from sklearn.preprocessing import OneHotEncoder, MinMaxScaler, StandardScaler, OrdinalEncoder, PolynomialFeatures, FunctionTransformer, LabelEncoder, PowerTransformer, KBinsDiscretizer
-from sklearn.decomposition import PCA
-from sklearn.compose import ColumnTransformer, make_column_selector
-from sklearn.pipeline import make_pipeline, Pipeline
-from sklearn.model_selection import train_test_split, GridSearchCV, cross_val_score, RepeatedStratifiedKFold, RepeatedKFold, cross_validate
-from sklearn.metrics import confusion_matrix, precision_score, recall_score, accuracy_score, precision_recall_curve, classification_report, mean_squared_error, mean_absolute_error, r2_score
-from sklearn.datasets import load_iris
-from sklearn.inspection import permutation_importance
-from sklearn import metrics
-from imblearn.pipeline import Pipeline as ImbPipeline
-from scipy.stats import norm,skew
-from pandas.plotting import scatter_matrix
+import seaborn as sns
+import yaml
+import logging
 
-# Modelos:
+
+from sklearn.preprocessing import ( StandardScaler)
+
+from sklearn.pipeline import make_pipeline, Pipeline
+from sklearn.model_selection import (   GridSearchCV
+
+)
+from sklearn.metrics import ( mean_squared_error, 
+    mean_absolute_error, r2_score
+)
+
+
+import joblib
+
+# Modelos
 from sklearn.linear_model import LinearRegression, LogisticRegression
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.tree import DecisionTreeRegressor
@@ -23,26 +27,10 @@ from sklearn.ensemble import RandomForestRegressor
 from xgboost import XGBRegressor
 from sklearn.neural_network import MLPRegressor
 from sklearn.svm import SVR
-import numpy as np
-import pandas as pd
-import yaml
 
+# Importación de un logger personalizado
 from src.utils.logs import get_logger
 
-import pandas as pd
-import yaml
-import numpy as np
-from sklearn.linear_model import LinearRegression
-from sklearn.neighbors import KNeighborsRegressor
-from sklearn.tree import DecisionTreeRegressor
-from sklearn.ensemble import RandomForestRegressor
-from xgboost import XGBRegressor
-from sklearn.svm import SVR
-from sklearn.model_selection import GridSearchCV
-from sklearn.preprocessing import StandardScaler
-from sklearn.pipeline import Pipeline
-from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
-import logging
 
 class ModelEvaluator:
     def __init__(self, config_path):
@@ -135,6 +123,11 @@ class ModelEvaluator:
 
         self.logger.info(f'Best Model: {best_model_name} with and R2: {best_r2:.3f} RMSE: {best_score:.3f} ')
         self.logger.info(f'Best Model Train R2: {best_r2_train:.3f} and RMSE: {best_rmse_train:.3f}')
+
+        # exportar el mejor modelo
+
+        joblib.dump(best_model, self.config['model']['output_model_path'])
+
 
 
         return best_model_name, best_model

@@ -33,6 +33,7 @@ model:
   n_repeats: 3
   optmise_metric: 'neg_root_mean_squared_error'
   models_to_tune: ['XGBoost', 'RF']
+  output_model_path: "models/best_model.pkl"
   model_params:
     LR: {}
     kNN:
