@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <title>DVC Plot</title>
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/vega@5.20.2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.2.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.18.2"></script>
+    
+    <style>
+        table {
+            border-spacing: 15px;
+        }
+    </style>
+</head>
+<body>
+    
+    <div id = "reports_predictions_predictions_csv">
+        <script type = "text/javascript">
+            var spec = {"$schema": "https://vega.github.io/schema/vega-lite/v5.json", "data": {"values": [{"True Values": "9.4", "Predicted Values": "10.499457", "rev": "workspace"}, {"True Values": "7.7", "Predicted Values": "9.272169", "rev": "workspace"}, {"True Values": "10.9", "Predicted Values": "9.129834", "rev": "workspace"}, {"True Values": "8.1", "Predicted Values": "10.192351", "rev": "workspace"}, {"True Values": "12.3", "Predicted Values": "10.061509", "rev": "workspace"}, {"True Values": "4.0", "Predicted Values": "3.557628", "rev": "workspace"}, {"True Values": "11.0", "Predicted Values": "10.264735", "rev": "workspace"}, {"True Values": "16.8", "Predicted Values": "15.552491", "rev": "workspace"}, {"True Values": "10.3", "Predicted Values": "9.424523", "rev": "workspace"}, {"True Values": "17.8", "Predicted Values": "16.294748", "rev": "workspace"}, {"True Values": "11.0", "Predicted Values": "14.212398", "rev": "workspace"}, {"True Values": "9.7", "Predicted Values": "10.192241", "rev": "workspace"}, {"True Values": "6.5", "Predicted Values": "6.943887", "rev": "workspace"}, {"True Values": "8.4", "Predicted Values": "10.418793", "rev": "workspace"}, {"True Values": "5.1", "Predicted Values": "7.0038586", "rev": "workspace"}, {"True Values": "12.5", "Predicted Values": "9.416355", "rev": "workspace"}, {"True Values": "13.0", "Predicted Values": "14.020085", "rev": "workspace"}, {"True Values": "8.0", "Predicted Values": "8.612721", "rev": "workspace"}, {"True Values": "5.7", "Predicted Values": "5.1060386", "rev": "workspace"}, {"True Values": "9.9", "Predicted Values": "10.521808", "rev": "workspace"}, {"True Values": "7.0", "Predicted Values": "7.703907", "rev": "workspace"}, {"True Values": "8.3", "Predicted Values": "8.004466", "rev": "workspace"}, {"True Values": "6.3", "Predicted Values": "6.8326054", "rev": "workspace"}, {"True Values": "11.8", "Predicted Values": "10.437087", "rev": "workspace"}, {"True Values": "11.4", "Predicted Values": "8.903494", "rev": "workspace"}, {"True Values": "8.7", "Predicted Values": "8.29723", "rev": "workspace"}, {"True Values": "15.0", "Predicted Values": "16.214674", "rev": "workspace"}]}, "title": {"text": "reports/predictions/predictions.csv", "anchor": "middle"}, "width": 300, "height": 300, "mark": {"type": "point", "tooltip": {"content": "data"}}, "params": [{"name": "grid", "select": "interval", "bind": "scales"}], "encoding": {"x": {"field": "True Values", "type": "quantitative", "title": "True Values"}, "y": {"field": "Predicted Values", "type": "quantitative", "title": "Predicted Values"}, "color": {"field": "rev", "scale": {"domain": ["workspace"], "range": ["#945dd6"]}}, "shape": {}, "tooltip": [{"field": "rev"}, {"field": "True Values"}, {"field": "Predicted Values"}]}};
+            vegaEmbed('#reports_predictions_predictions_csv', spec);
+        </script>
+    </div>
+    
+</body>
+</html>

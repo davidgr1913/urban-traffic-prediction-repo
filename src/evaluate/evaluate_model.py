@@ -38,6 +38,7 @@ class ModelEvaluator:
         self.logger.info(f'Test MAE: {mae_test:.3f}')
         self.logger.info(f'Test R2: {r2_test:.3f}')
         self.save_metrics_for_dvc(rmse_test, mae_test, r2_test)
+        self.save_predictions_to_csv(self.ytest, y_pred_test)
         self.plot_prediction_quality(self.ytest, y_pred_test)
 
     def plot_prediction_quality(self, y_true, y_pred):
@@ -71,6 +72,18 @@ class ModelEvaluator:
             json.dump(metrics, f, indent=4)
 
         self.logger.info(f'Métricas guardadas en {metrics_path}')
+
+    def save_predictions_to_csv(self, y_true, y_pred):
+        # Guardar valores reales y predichos en un archivo CSV
+        predictions_df = pd.DataFrame({
+            'True Values': y_true,
+            'Predicted Values': y_pred
+        })
+
+        csv_path = os.path.join(self.config['evaluate']['output_predictions_csv_path'])
+        predictions_df.to_csv(csv_path, index=False)
+        self.logger.info(f'Valores reales y predichos guardados en {csv_path}')
+
 
 
     def run(self):

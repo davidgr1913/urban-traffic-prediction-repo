@@ -46,8 +46,13 @@ stages:
       - src\model\train.py
       - models/best_model.pkl
       - data/split/test.csv
-    outs:
-      - reports/figures/prediction_vs_true.png
-      - reports/metrics/metrics.json
+    metrics:
+    - reports/metrics/metrics.json:
+        cache: false
+    plots:
+    - reports/figures/prediction_vs_true.png:
+        cache: false
+      
+
 
 

@@ -213,6 +213,7 @@ stages:
           log_level: INFO
         evaluate:
           output_fig_prediction_true_path: reports/figures/prediction_vs_true.png
+          output_predictions_csv_path: reports/predictions/predictions.csv
           output_metrics_path: reports/metrics/metrics.json
     outs:
     - path: reports/figures/prediction_vs_true.png
