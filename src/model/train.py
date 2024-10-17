@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import yaml
 import logging
-
-
+import argparse
+from sklearn.model_selection import cross_val_predict
 from sklearn.preprocessing import ( StandardScaler)
 
 from sklearn.pipeline import make_pipeline, Pipeline
@@ -31,7 +31,7 @@ from sklearn.svm import SVR
 from src.utils.logs import get_logger
 
 
-class ModelEvaluator:
+class ModelTrainer:
     def __init__(self, config_path):
         self.model_dict = {
             'LR': LinearRegression(),
@@ -42,101 +42,89 @@ class ModelEvaluator:
             'SVR': SVR()
         }
         self.config = yaml.safe_load(open(config_path))
-        self.logger = self.get_logger('MODEL_EVALUATOR', log_level=self.config['base']['log_level'])
-        self.logger.info('Initialized ModelEvaluator')
+        self.logger = get_logger('MODEL_TRAINER', log_level=self.config['base']['log_level'])
+        self.logger.info('Initialized ModelTrainer')
         self.param_grids = self.config['model']['model_params']  # Leer hiperparámetros del YAML
 
-    def get_logger(self, name, log_level=logging.INFO):
-        logger = logging.getLogger(name)
-        logger.setLevel(log_level)
-        handler = logging.StreamHandler()
-        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        handler.setFormatter(formatter)
-        logger.addHandler(handler)
-        return logger
+
 
     def get_data(self):
         self.logger.info('Loading datasets...')
         df_train = pd.read_csv(self.config['data_split']['data_train_path'], sep=';')
-        df_test = pd.read_csv(self.config['data_split']['data_test_path'], sep=';')
         self.Xtrain = df_train.drop(self.config['model']['target'], axis=1)
         self.ytrain = df_train[self.config['model']['target']]
-        self.Xtest = df_test.drop(self.config['model']['target'], axis=1)
-        self.ytest = df_test[self.config['model']['target']]
         self.logger.info('Datasets loaded successfully.')
 
     def scale_data(self):
         self.logger.info('Scaling data...')
         scaler = StandardScaler()
         self.Xtrain_scaled = scaler.fit_transform(self.Xtrain)
-        self.Xtest_scaled = scaler.transform(self.Xtest)
         self.logger.info('Data scaling completed.')
 
-    def evaluate_models(self):
+    def train_models(self):
         best_model_name = None
         best_model = None
         best_score = float('inf')
 
         for name, model in self.model_dict.items():
             self.logger.info(f'Evaluating model: {name}')
+            
+            # Crear un pipeline que incluye escalado y el modelo actual
             pipeline = Pipeline(steps=[('scaler', StandardScaler()), ('model', model)])
 
             # Obtener el grid de hiperparámetros desde el YAML
             param_grid = self.param_grids.get(name, {})
-
+            
+            # Usar GridSearchCV para encontrar los mejores hiperparámetros usando validación cruzada
             grid_search = GridSearchCV(pipeline, param_grid, cv=self.config['model']['n_splits'], 
-                                       scoring=self.config['model']['optmise_metric'])
+                                    scoring=self.config['model']['optmise_metric'])
+            
+            # Entrenar usando GridSearchCV
             grid_search.fit(self.Xtrain, self.ytrain)
 
-            best_params = grid_search.best_params_
+            # Obtener el mejor modelo resultante de la búsqueda en grid
             best_model_temp = grid_search.best_estimator_
 
-            # Evaluar en datos de entrenamiento
-            y_pred_train = best_model_temp.predict(self.Xtrain)
-            rmse_train = np.sqrt(mean_squared_error(self.ytrain, y_pred_train))
-            mae_train = mean_absolute_error(self.ytrain, y_pred_train)
-            r2_train = r2_score(self.ytrain, y_pred_train)
+            # Validación cruzada para calcular predicciones en los datos de entrenamiento
+            y_pred_cv = cross_val_predict(best_model_temp, self.Xtrain, self.ytrain, cv=self.config['model']['n_splits'])
 
-            # Evaluar en datos de prueba
-            y_pred_test = best_model_temp.predict(self.Xtest)
-            rmse_test = np.sqrt(mean_squared_error(self.ytest, y_pred_test))
-            mae_test = mean_absolute_error(self.ytest, y_pred_test)
-            r2_test = r2_score(self.ytest, y_pred_test)
+            # Calcular métricas de rendimiento basadas en las predicciones de la validación cruzada
+            rmse_cv = np.sqrt(mean_squared_error(self.ytrain, y_pred_cv))
+            mae_cv = mean_absolute_error(self.ytrain, y_pred_cv)
+            r2_cv = r2_score(self.ytrain, y_pred_cv)
 
             self.logger.info(f'Model: {name}')
-            self.logger.info(f'Best Params: {best_params}')
-            self.logger.info(f'Train RMSE: {rmse_train:.3f}, Test RMSE: {rmse_test:.3f}')
-            self.logger.info(f'Train MAE: {mae_train:.3f}, Test MAE: {mae_test:.3f}')
-            self.logger.info(f'Train R2: {r2_train:.3f}, Test R2: {r2_test:.3f}')
+            self.logger.info(f'Cross-Validation RMSE: {rmse_cv:.3f}')
+            self.logger.info(f'Cross-Validation MAE: {mae_cv:.3f}')
+            self.logger.info(f'Cross-Validation R2: {r2_cv:.3f}')
 
-
-            if rmse_test < best_score:
-                best_score = rmse_test
+            # Si el modelo tiene el mejor RMSE en validación cruzada, guardarlo como el mejor modelo
+            if rmse_cv < best_score:
+                best_score = rmse_cv
                 best_model_name = name
                 best_model = best_model_temp
-                best_r2 = r2_test
 
-                best_r2_train = r2_train
-                best_rmse_train = rmse_train
-        
+        # Log del mejor modelo
+        self.logger.info(f'Best Model: {best_model_name} with Cross-Validation RMSE: {best_score:.3f}')
 
-        self.logger.info(f'Best Model: {best_model_name} with and R2: {best_r2:.3f} RMSE: {best_score:.3f} ')
-        self.logger.info(f'Best Model Train R2: {best_r2_train:.3f} and RMSE: {best_rmse_train:.3f}')
-
-        # exportar el mejor modelo
-
+        # Guardar el mejor modelo en un archivo
         joblib.dump(best_model, self.config['model']['output_model_path'])
 
-
-
         return best_model_name, best_model
+        
 
     def run(self):
         self.get_data()
         self.scale_data()
-        best_model_name, best_model = self.evaluate_models()
-        return best_model_name, best_model
+        best_model_name, best_model = self.train_models()
+        self.logger.info('Model training completed.')
+        self.logger.info('Best model saved successfully.')
+        
+        
 
-# Uso de la clase
-# evaluator = ModelEvaluator('config.yaml')
-# best_model_name, best_model = evaluator.run()
+if __name__ == '__main__':
+    args_parser = argparse.ArgumentParser()
+    args_parser.add_argument('--config', dest='config', required=True)
+    args = args_parser.parse_args()
+    model_evaluator = ModelTrainer(config_path=args.config)
+    model_evaluator.run()

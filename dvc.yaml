@@ -1,3 +1,53 @@
 stages:
   preprocess:
     cmd: python src\data\preprocess.py --config=params.yaml
+    params:
+      - data_preprocess
+      - base
+    outs:
+      - data_preprocessed_path
+  process:
+    cmd: python src\data\process.py --config=params.yaml
+    params:
+      - data_process
+      - base
+    deps:
+      - src\data\preprocess.py
+      - data_preprocessed_path
+    outs:
+      - data_processed_path
+  split:
+    cmd: python src\data\split.py --config=params.yaml
+    params:
+      - data_split
+      - base
+    deps:
+      - src\data\process.py
+      - data_processed_path
+    outs:
+      - data_train_path
+      - data_test_path
+  train:
+    cmd: python src\model\train.py --config=params.yaml
+    params:
+      - model
+      - base
+    deps:
+      - src\data\split.py
+      - data_train_path
+    outs:
+      - output_model_path
+  evaluate:
+    cmd: python src\model\evaluate.py --config=params.yaml
+    params:
+      - evaluate
+      - base
+    deps:
+      - src\model\train.py
+      - output_model_path
+      - data_test_path
+    outs:
+      - output_fig_path
+      - output_metrics_path
+
+
