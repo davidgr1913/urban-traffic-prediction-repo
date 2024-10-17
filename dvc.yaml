@@ -1,0 +1,3 @@
+stages:
+  preprocess:
+    cmd: python src\data\preprocess.py --config=params.yaml
