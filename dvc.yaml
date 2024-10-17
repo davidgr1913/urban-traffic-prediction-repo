@@ -5,7 +5,7 @@ stages:
       - data_preprocess
       - base
     outs:
-      - data_preprocessed_path
+      - data/preprocessed/preprocessed_data.csv
   process:
     cmd: python src\data\process.py --config=params.yaml
     params:
@@ -13,9 +13,9 @@ stages:
       - base
     deps:
       - src\data\preprocess.py
-      - data_preprocessed_path
+      - data/preprocessed/preprocessed_data.csv
     outs:
-      - data_processed_path
+      - data/processed/processed_data.csv
   split:
     cmd: python src\data\split.py --config=params.yaml
     params:
@@ -23,10 +23,10 @@ stages:
       - base
     deps:
       - src\data\process.py
-      - data_processed_path
+      - data/processed/processed_data.csv
     outs:
-      - data_train_path
-      - data_test_path
+      - data/split/train.csv
+      - data/split/test.csv
   train:
     cmd: python src\model\train.py --config=params.yaml
     params:
@@ -34,20 +34,20 @@ stages:
       - base
     deps:
       - src\data\split.py
-      - data_train_path
+      - data/split/train.csv
     outs:
-      - output_model_path
+      - models/best_model.pkl
   evaluate:
-    cmd: python src\model\evaluate.py --config=params.yaml
+    cmd: python src\evaluate\evaluate_model.py --config=params.yaml
     params:
       - evaluate
       - base
     deps:
       - src\model\train.py
-      - output_model_path
-      - data_test_path
+      - models/best_model.pkl
+      - data/split/test.csv
     outs:
-      - output_fig_path
-      - output_metrics_path
+      - reports/figures/prediction_vs_true.png
+      - reports/metrics/metrics.json
 
 

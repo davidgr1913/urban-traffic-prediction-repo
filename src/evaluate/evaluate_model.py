@@ -51,7 +51,7 @@ class ModelEvaluator:
         plt.legend()
 
         # Guardar el gráfico en la carpeta
-        plot_path = os.path.join(self.config['evaluate']['output_fig_path'], 'prediction_vs_true.png')
+        plot_path = os.path.join(self.config['evaluate']['output_fig_prediction_true_path'])
         plt.savefig(plot_path)
         self.logger.info(f'Gráfico de calidad de predicción guardado en {plot_path}')
         plt.close()
@@ -66,7 +66,7 @@ class ModelEvaluator:
             'R2': r2
         }
 
-        metrics_path = os.path.join(self.config['evaluate']['output_metrics_path'], 'metrics.json')
+        metrics_path = os.path.join(self.config['evaluate']['output_metrics_path'])
         with open(metrics_path, 'w') as f:
             json.dump(metrics, f, indent=4)
 

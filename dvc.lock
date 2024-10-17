@@ -1,0 +1,225 @@
+schema: '2.0'
+stages:
+  preprocess:
+    cmd: python src\data\preprocess.py --config=params.yaml
+    params:
+      params.yaml:
+        base:
+          random_state: 42
+          log_level: INFO
+        data_preprocess:
+          data_raw_path: data/raw/Behavior of the urban traffic of the city of Sao
+            Paulo in Brazil.csv
+          data_preprocessed_path: data/preprocessed/preprocessed_data.csv
+    outs:
+    - path: data/preprocessed/preprocessed_data.csv
+      hash: md5
+      md5: 3e2887df9bf18a0844b1d2160b3001d0
+      size: 6134
+  process:
+    cmd: python src\data\process.py --config=params.yaml
+    deps:
+    - path: data/preprocessed/preprocessed_data.csv
+      hash: md5
+      md5: 3e2887df9bf18a0844b1d2160b3001d0
+      size: 6134
+    - path: src\data\preprocess.py
+      hash: md5
+      md5: 08073680ea5bf4af14d0ee845e579cd0
+      size: 1860
+    params:
+      params.yaml:
+        base:
+          random_state: 42
+          log_level: INFO
+        data_process:
+          fill_na_method: mean
+          data_processed_path: data/processed/processed_data.csv
+          positions:
+          - 0
+          - 1
+          - 2
+          - 27
+          - 28
+          - 29
+          - 54
+          - 55
+          - 56
+          - 81
+          - 82
+          - 83
+          - 108
+          - 109
+          - 110
+          monday_position: 26
+          tuesday_position: 53
+          wednesday_position: 80
+          thursday_position: 107
+          friday_position: 134
+    outs:
+    - path: data/processed/processed_data.csv
+      hash: md5
+      md5: c6960dec1f580d77d8c0f21e161d6b01
+      size: 6408
+  split:
+    cmd: python src\data\split.py --config=params.yaml
+    deps:
+    - path: data/processed/processed_data.csv
+      hash: md5
+      md5: c6960dec1f580d77d8c0f21e161d6b01
+      size: 6408
+    - path: src\data\process.py
+      hash: md5
+      md5: 0a21ea60889e3c68367ba8551bf3de1a
+      size: 3234
+    params:
+      params.yaml:
+        base:
+          random_state: 42
+          log_level: INFO
+        data_split:
+          test_size: 0.2
+          data_train_path: data/split/train.csv
+          data_test_path: data/split/test.csv
+          stratify: hour_decoded
+    outs:
+    - path: data/split/test.csv
+      hash: md5
+      md5: bb82994b8ffc3cb7dc7439e8d9f036f9
+      size: 1564
+    - path: data/split/train.csv
+      hash: md5
+      md5: 9050839d570eed3830e202532aed6ff3
+      size: 5196
+  train:
+    cmd: python src\model\train.py --config=params.yaml
+    deps:
+    - path: data/split/train.csv
+      hash: md5
+      md5: 9050839d570eed3830e202532aed6ff3
+      size: 5196
+    - path: src\data\split.py
+      hash: md5
+      md5: 69c56f38ba95985a14039236c1068491
+      size: 1400
+    params:
+      params.yaml:
+        base:
+          random_state: 42
+          log_level: INFO
+        model:
+          list_models:
+          - LR
+          - kNN
+          - DTree
+          - RF
+          - XGBoost
+          - SVR
+          metrics:
+          - neg_mean_squared_error
+          - neg_mean_absolute_error
+          - r2
+          - neg_root_mean_squared_error
+          target: slowness_in_traffic
+          n_splits: 10
+          n_repeats: 3
+          optmise_metric: neg_root_mean_squared_error
+          models_to_tune:
+          - XGBoost
+          - RF
+          output_model_path: models/best_model.pkl
+          model_params:
+            LR: {}
+            kNN:
+              model__n_neighbors:
+              - 3
+              - 5
+              - 7
+              - 9
+            DTree:
+              model__max_depth:
+              - 2
+              - 3
+              - 4
+              model__min_samples_split:
+              - 2
+              - 5
+              - 10
+              model__max_features:
+              - 3
+              - 5
+              - 7
+            RF:
+              model__n_estimators:
+              - 5
+              - 10
+              - 20
+              model__max_depth:
+              - 2
+              - 5
+              - 10
+            XGBoost:
+              model__max_depth:
+              - 1
+              - 2
+              - 3
+              - 4
+              model__learning_rate:
+              - 0.01
+              - 0.1
+              - 0.3
+              - 0.5
+              - 1
+              - 5
+              model__subsample:
+              - 0.1
+              - 0.3
+              - 0.5
+              - 0.7
+              - 1
+            SVR:
+              model__C:
+              - 0.1
+              - 1
+              - 10
+              model__epsilon:
+              - 0.1
+              - 0.2
+              - 0.3
+    outs:
+    - path: models/best_model.pkl
+      hash: md5
+      md5: 0f288cfd4f047b8be16bd0cb9212ff8e
+      size: 149567
+  evaluate:
+    cmd: python src\evaluate\evaluate_model.py --config=params.yaml
+    deps:
+    - path: data/split/test.csv
+      hash: md5
+      md5: bb82994b8ffc3cb7dc7439e8d9f036f9
+      size: 1564
+    - path: models/best_model.pkl
+      hash: md5
+      md5: 0f288cfd4f047b8be16bd0cb9212ff8e
+      size: 149567
+    - path: src\model\train.py
+      hash: md5
+      md5: 18df2d3817f34ffbf0f19aa7d9d38b75
+      size: 5068
+    params:
+      params.yaml:
+        base:
+          random_state: 42
+          log_level: INFO
+        evaluate:
+          output_fig_prediction_true_path: reports/figures/prediction_vs_true.png
+          output_metrics_path: reports/metrics/metrics.json
+    outs:
+    - path: reports/figures/prediction_vs_true.png
+      hash: md5
+      md5: 2966fc3b533ea0b8b55cf56e68e260c1
+      size: 37108
+    - path: reports/metrics/metrics.json
+      hash: md5
+      md5: bbe53847ae1a9c7b37b18772d772d205
+      size: 99

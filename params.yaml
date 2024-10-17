@@ -54,5 +54,5 @@ model:
       model__epsilon: [0.1, 0.2, 0.3]
 
 evaluate:
-  output_fig_path: "reports/figures/"
-  output_metrics_path: "reports/metrics/"
+  output_fig_prediction_true_path: "reports/figures/prediction_vs_true.png"
+  output_metrics_path: "reports/metrics/metrics.json"
