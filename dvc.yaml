@@ -48,10 +48,10 @@ stages:
       - data/split/test.csv
     metrics:
     - reports/metrics/metrics.json:
-        cache: false
+        cache: true
     plots:
     - reports/figures/prediction_vs_true.png:
-        cache: false
+        cache: true
       
 
 
