@@ -62,7 +62,7 @@ Este proyecto utiliza Machine Learning para analizar y predecir el comportamient
 ## Autores
 **Equipo 15**
 Nadia Luna - A01658134
-David García
+David García - A01152606
 Dianna Pérez - A08877728
 Michelle Durán
 Arantxa Coronel - A01620352
