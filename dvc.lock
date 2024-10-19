@@ -121,11 +121,10 @@ stages:
           - r2
           - neg_root_mean_squared_error
           target: slowness_in_traffic
-          n_splits: 10
+          n_splits: 5
           n_repeats: 3
           optmise_metric: neg_root_mean_squared_error
           models_to_tune:
-          - XGBoost
           - RF
           output_model_path: models/best_model.pkl
           model_params:
@@ -185,7 +184,7 @@ stages:
     outs:
     - path: models/best_model.pkl
       hash: md5
-      md5: b75363bbff669fcf26eaf81fe68a580d
+      md5: a6b1991c98ac9156fc39483e4448b481
       size: 135499
   evaluate:
     cmd: python src\evaluate\evaluate_model.py --config=params.yaml
