@@ -1,0 +1,56 @@
+base:
+  random_state: 42
+  log_level: INFO
+
+data_preprocess:
+  data_raw_path: "data/raw/Behavior of the urban traffic of the city of Sao Paulo in Brazil.csv"
+  data_preprocessed_path: "data/preprocessed/preprocessed_data.csv"
+
+data_process:
+  fill_na_method: "mean"
+  data_processed_path: "data/processed/processed_data.csv"
+  positions: [0, 1, 2, 27, 28, 29, 54, 55, 56, 81, 82, 83, 108, 109, 110]
+  monday_position: 26
+  tuesday_position: 53
+  wednesday_position: 80
+  thursday_position: 107
+  friday_position: 134
+
+data_split:
+  test_size: 0.2  # Ajustado en el experimento
+  data_train_path: "data/split/train.csv"
+  data_test_path: "data/split/test.csv"
+  stratify: "hour_decoded"
+
+model:
+  list_models: ['LR', 'kNN', 'DTree', 'RF', 'XGBoost', 'SVR']
+  metrics: ['neg_mean_squared_error', 'neg_mean_absolute_error', 'r2', 'neg_root_mean_squared_error']
+  target: 'slowness_in_traffic'
+  n_splits: 10
+  n_repeats: 3
+  optmise_metric: 'neg_root_mean_squared_error'
+  models_to_tune: ['XGBoost', 'RF']
+  output_model_path: "models/best_model.pkl"
+  model_params:
+    LR: {}
+    kNN:
+      model__n_neighbors: [3, 5, 7, 9]
+    DTree:
+      model__max_depth: [2, 3, 4]
+      model__min_samples_split: [2, 5, 10]
+      model__max_features: [3, 5, 7]
+    RF:
+      model__n_estimators: [100]  # Ajustado en el experimento
+      model__max_depth: [2, 5, 10]
+    XGBoost:
+      model__max_depth: [3]  # Ajustado en el experimento
+      model__learning_rate: [0.03, 0.05]
+      model__subsample: [0.1, 0.3, 0.5, 0.7, 1]
+    SVR:
+      model__C: [0.1, 1, 10]
+      model__epsilon: [0.1, 0.2, 0.3]
+
+evaluate:
+  output_fig_prediction_true_path: "reports/figures/prediction_vs_true.png"
+  output_predictions_csv_path: "reports/predictions/predictions.csv"
+  output_metrics_path: "reports/metrics/metrics.json"
