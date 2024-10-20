@@ -78,26 +78,26 @@ stages:
           random_state: 42
           log_level: INFO
         data_split:
-          test_size: 0.2
+          test_size: 0.1
           data_train_path: data/split/train.csv
           data_test_path: data/split/test.csv
           stratify: hour_decoded
     outs:
     - path: data/split/test.csv
       hash: md5
-      md5: bb82994b8ffc3cb7dc7439e8d9f036f9
-      size: 1564
+      md5: 69c6488b6968ace0ef4a827d1cc77cdc
+      size: 980
     - path: data/split/train.csv
       hash: md5
-      md5: 9050839d570eed3830e202532aed6ff3
-      size: 5196
+      md5: fee9c6186af23241a685ca544a1da71c
+      size: 5780
   train:
     cmd: python src\model\train.py --config=params.yaml
     deps:
     - path: data/split/train.csv
       hash: md5
-      md5: 9050839d570eed3830e202532aed6ff3
-      size: 5196
+      md5: fee9c6186af23241a685ca544a1da71c
+      size: 5780
     - path: src\data\split.py
       hash: md5
       md5: 69c56f38ba95985a14039236c1068491
@@ -151,14 +151,19 @@ stages:
               - 7
             RF:
               model__n_estimators:
-              - 100
+              - 5
+              - 10
+              - 20
               model__max_depth:
               - 2
               - 5
               - 10
             XGBoost:
               model__max_depth:
+              - 1
+              - 2
               - 3
+              - 4
               model__learning_rate:
               - 0.03
               - 0.05
@@ -180,19 +185,19 @@ stages:
     outs:
     - path: models/best_model.pkl
       hash: md5
-      md5: 547bbd35e4b5b84b9a08e08f841cf090
-      size: 866983
+      md5: a6b1991c98ac9156fc39483e4448b481
+      size: 135499
   evaluate:
     cmd: python src\evaluate\evaluate_model.py --config=params.yaml
     deps:
     - path: data/split/test.csv
       hash: md5
-      md5: bb82994b8ffc3cb7dc7439e8d9f036f9
-      size: 1564
+      md5: 69c6488b6968ace0ef4a827d1cc77cdc
+      size: 980
     - path: models/best_model.pkl
       hash: md5
-      md5: 547bbd35e4b5b84b9a08e08f841cf090
-      size: 866983
+      md5: a6b1991c98ac9156fc39483e4448b481
+      size: 135499
     - path: src\model\train.py
       hash: md5
       md5: 18df2d3817f34ffbf0f19aa7d9d38b75
@@ -209,9 +214,9 @@ stages:
     outs:
     - path: reports/figures/prediction_vs_true.png
       hash: md5
-      md5: 7f9f79907024b37aef5d4db087deaa20
-      size: 37755
+      md5: db24eabae12a1ea7cdd37aa0013791d1
+      size: 36924
     - path: reports/metrics/metrics.json
       hash: md5
-      md5: e31aec3175e32ee0b45902539cb6dbc8
-      size: 98
+      md5: 0b32dad5ca6ed7d1fb023b66d9750f6c
+      size: 99
