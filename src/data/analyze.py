@@ -8,6 +8,37 @@ import yaml
 from src.utils.logs import get_logger
 
 class DataFrameAnalyzer:
+    """
+    DataFrameAnalyzer is a class for performing various data analysis tasks on a pandas DataFrame.
+    Attributes:
+        config (dict): Configuration loaded from a YAML file.
+        df (pd.DataFrame): DataFrame loaded from a CSV file specified in the configuration.
+        logger (Logger): Logger instance for logging messages.
+    Methods:
+        show_info():
+            Mostrar información general del DataFrame.
+            Returns:
+                pd.DataFrame: The DataFrame with general information printed.
+        descriptive_statistics():
+            Mostrar estadísticas descriptivas.
+            Returns:
+                pd.DataFrame: Descriptive statistics of the DataFrame.
+        identify_null_values():
+            Identificar y mostrar los valores nulos en cada columna.
+            Prints the number of null values in each column.
+        plot_target_distribution():
+            Mostrar la distribución de la variable objetivo.
+            Plots the distribution of the target variable 'slowness_in_traffic'.
+        plot_numeric_distributions():
+            Mostrar la distribución de todas las variables numéricas.
+            Plots the distribution of all numeric variables in the DataFrame.
+        correlation_heatmap():
+            Generar un mapa de calor de las correlaciones entre variables numéricas.
+            Plots a heatmap of the correlations between numeric variables in the DataFrame.
+        full_analysis():
+            Realizar un análisis completo del DataFrame.
+            Performs a full analysis by calling all the above methods sequentially.
+    """
 
     def __init__(self, config_path):
 

@@ -16,6 +16,24 @@ HOURS = {
 }
 
 def preprocess_data(config_path):
+    """
+    Preprocess the raw dataset according to the configuration file.
+    Args:
+        config_path (str): Path to the YAML configuration file.
+    The function performs the following steps:
+    1. Loads the configuration from the given YAML file.
+    2. Initializes a logger with the specified log level.
+    3. Reads the raw dataset from the path specified in the configuration.
+    4. Converts column names to snake_case.
+    5. Decodes the 'hour_coded' column to 'hour_decoded' using a predefined mapping.
+    6. Converts the decoded hours to integers.
+    7. Replaces the delimiter in the 'slowness_in_traffic' column and converts it to a numeric type.
+    8. Saves the preprocessed dataset to the path specified in the configuration.
+    Raises:
+        FileNotFoundError: If the configuration file or dataset file is not found.
+        KeyError: If any of the required keys are missing in the configuration file.
+        ValueError: If there are issues with data conversion.
+    """
 
     config = yaml.safe_load(open(config_path))
 

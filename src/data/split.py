@@ -8,10 +8,20 @@ from src.utils.logs import get_logger
 
 
 def data_split(config_path: Text) -> None:
-    """Split dataset into train/test.
-    Args:
-        config_path {Text}: path to config
     """
+    Splits the dataset into training and testing sets based on the configuration provided.
+    Args:
+        config_path (Text): Path to the configuration file in YAML format.
+    Returns:
+        None
+    The function performs the following steps:
+    1. Reads the configuration file to load the settings.
+    2. Initializes a logger with the specified log level.
+    3. Loads the processed dataset from the path specified in the configuration.
+    4. Splits the dataset into training and testing sets based on the test size, random state, and stratification settings from the configuration.
+    5. Saves the training and testing sets to the paths specified in the configuration.
+    """
+
 
     with open(config_path) as conf_file:
         config = yaml.safe_load(conf_file)

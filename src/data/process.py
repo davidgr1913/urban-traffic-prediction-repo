@@ -7,6 +7,29 @@ from src.utils.logs import get_logger
 days_to_code = {'Monday': 1, 'Tuesday': 2, 'Wednesday': 3, 'Thursday': 4, 'Friday': 5}
 
 class DataFrameProcessor:
+    """
+    A class used to preprocess a DataFrame based on a configuration file.
+    Attributes
+    ----------
+    config : dict
+        Configuration loaded from the provided YAML file.
+    df : pandas.DataFrame
+        DataFrame loaded from the CSV file specified in the configuration.
+    fill_na_method : str
+        Method to fill missing values ('mean', 'median', 'mode').
+    logger : logging.Logger
+        Logger instance for logging messages.
+    Methods
+    -------
+    fill_missing_values():
+        Fills missing values in the DataFrame based on the specified method.
+    transform_days():
+        Transforms day names to numerical values based on the configuration.
+    export_data():
+        Exports the processed DataFrame to a CSV file.
+    full_process():
+        Executes the full data processing pipeline: filling missing values, transforming days, and exporting data.
+    """
 
     def __init__(self, config_path):
 
@@ -18,6 +41,25 @@ class DataFrameProcessor:
     
 
     def fill_missing_values(self):
+        """
+        Fills missing values in the 'slowness_in_traffic' column of the dataframe using the specified method.
+
+        This method checks for NaN values in the 'slowness_in_traffic' column and fills them using the method specified 
+        by the 'fill_na_method' attribute. The available methods are 'mean', 'median', and 'mode'.
+
+        Logging:
+            - Logs an info message indicating the start of the missing values check.
+            - Logs a warning message if NaN values are found in the 'slowness_in_traffic' column.
+            - Logs an info message indicating the method used to fill NaN values.
+
+        Attributes:
+            fill_na_method (str): The method to use for filling NaN values. Can be 'mean', 'median', or 'mode'.
+            df (pandas.DataFrame): The dataframe containing the 'slowness_in_traffic' column.
+            logger (logging.Logger): The logger instance for logging messages.
+
+        Raises:
+            ValueError: If 'fill_na_method' is not one of 'mean', 'median', or 'mode'.
+        """
         self.logger.info("Checking for missing values")
         if self.df['slowness_in_traffic'].isnull().any():
             self.logger.warning(f"There are NaN values in 'Slowness in traffic (%)'. They will be filled with the {self.fill_na_method }")
@@ -31,6 +73,18 @@ class DataFrameProcessor:
                 self.df.fillna(self.df.mode().iloc[0], inplace=True)
 
     def transform_days(self):
+        """
+        Transforms the 'day' column in the dataframe from day names to numerical values.
+        This method first assigns day names to the 'day' column based on the index positions
+        specified in the configuration. Then, it converts these day names to numerical values
+        using a predefined mapping (days_to_code).
+        Raises:
+            AssertionError: If the dataframe does not contain all the day names before converting
+                            them to numerical values.
+        Notes:
+            Ensure that the dataframe is first transformed to contain day names before applying
+            the numerical transformation.
+        """
         self.logger.info("Transforming days to numerical values")
     
         self.df['day'] = '0'
