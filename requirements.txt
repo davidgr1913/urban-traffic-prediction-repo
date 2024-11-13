@@ -7,4 +7,7 @@ pip
 python-dotenv
 tqdm
 typer
--e .
+pandas
+scikit-learn
+joblib
+xgboost

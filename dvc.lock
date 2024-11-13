@@ -25,8 +25,8 @@ stages:
       size: 6134
     - path: src\data\preprocess.py
       hash: md5
-      md5: 08073680ea5bf4af14d0ee845e579cd0
-      size: 1860
+      md5: c15ede85c2f5e3ab79be71a8c0097cf2
+      size: 2874
     params:
       params.yaml:
         base:
@@ -70,8 +70,8 @@ stages:
       size: 6408
     - path: src\data\process.py
       hash: md5
-      md5: 0a21ea60889e3c68367ba8551bf3de1a
-      size: 3234
+      md5: e109388d052198e9a31c71d4f75aeb0e
+      size: 5906
     params:
       params.yaml:
         base:
@@ -100,8 +100,8 @@ stages:
       size: 5780
     - path: src\data\split.py
       hash: md5
-      md5: 69c56f38ba95985a14039236c1068491
-      size: 1400
+      md5: 65f06d3ba8be7db2d14452d4d7c9fd38
+      size: 2009
     params:
       params.yaml:
         base:
@@ -185,7 +185,7 @@ stages:
     outs:
     - path: models/best_model.pkl
       hash: md5
-      md5: a6b1991c98ac9156fc39483e4448b481
+      md5: b75363bbff669fcf26eaf81fe68a580d
       size: 135499
   evaluate:
     cmd: python src\evaluate\evaluate_model.py --config=params.yaml
@@ -196,12 +196,12 @@ stages:
       size: 980
     - path: models/best_model.pkl
       hash: md5
-      md5: a6b1991c98ac9156fc39483e4448b481
+      md5: b75363bbff669fcf26eaf81fe68a580d
       size: 135499
     - path: src\model\train.py
       hash: md5
-      md5: 18df2d3817f34ffbf0f19aa7d9d38b75
-      size: 5068
+      md5: 0cc51330300bd3a5bd16f2a0569b1eb8
+      size: 8616
     params:
       params.yaml:
         base:
