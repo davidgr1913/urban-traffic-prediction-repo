@@ -21,7 +21,7 @@ def predict(data_json: dict):
     data_dict = data_json
 
     # Validate input length
-    if len(data_dict) != 18:
+    if len(data_dict) != 19:
         raise HTTPException(
             status_code=400,
             detail=f"Input must contain {model.n_features_in_} features."
