@@ -64,6 +64,6 @@ Este proyecto utiliza Machine Learning para analizar y predecir el comportamient
 Nadia Luna - A01658134
 David García - A01152606
 Dianna Pérez - A08877728
-Michelle Durán
+Michelle Durán - A01795690
 Arantxa Coronel - A01620352
 Christian Suárez 
