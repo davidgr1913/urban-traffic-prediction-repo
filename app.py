@@ -11,7 +11,12 @@ with open("./models/best_model.pkl", "rb") as f:
 
 
 # Initialize FastAPI app
-app = FastAPI()
+app = FastAPI(title="Traffic Prediction API", description="API for traffic prediction model", version="1.0",
+              description='''This is a simple API for traffic prediction model. It takes in 18 features and returns the predicted traffic volume.
+              ### funcionalidades:
+              # - **/predict**: endpoint para hacer predicciones
+              # - **/**: endpoint para obtener un mensaje de bienvenida''',
+              license_info={"name": "MIT", "url": "https://opensource.org/licenses/MIT"})
 
 # Define prediction endpoint
 @app.post("/predict")
